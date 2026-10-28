@@ -65,11 +65,14 @@ link, and the game shows its native "Copy layout?" or "Copy army?" prompt. You c
 |---|---|
 | Gradle | 9.6.0 |
 | Android Gradle Plugin (`agp`) | 9.4.1 |
-| Kotlin | 2.2.10 |
+| Kotlin | **2.4.10** (wizard default was 2.2.10; current libraries need 2.4) |
+| KSP / Hilt | 2.3.12 / 2.60.1 |
+| Navigation / Lifecycle | 2.10.2 / 2.11.0 |
+| kotlinx-serialization / coroutines | 1.12.0 / 1.11.0 |
 | Compose BOM | 2026.02.01 |
 | compileSdk / targetSdk | 37 (`compileSdk { version = release(37) }`) |
 | minSdk | 26 |
-| Java target | 11 |
+| Java target | 17 |
 
   **AGP 9 has Kotlin built in.** Don't apply `org.jetbrains.kotlin.android` and don't use a `kotlinOptions {}` block.
   Plugins are `com.android.application` + `org.jetbrains.kotlin.plugin.compose` (+ `kotlin.plugin.serialization`).
@@ -141,7 +144,9 @@ Sample: `h2m1e22_5-1e17_48-6e42_44i1x2-1x51-1x6-3x83d1x5u8x59-20x0s11x0`
 | `u` | `{count}x{troopId}`, joined by `-` | `8x59-20x0` | 8 Electro Dragon + 20 Barbarian = 260 housing |
 | `s` | `{count}x{spellId}`, joined by `-` | `11x0` | 11 Lightning |
 
-Confirmed IDs. **Troops:** 0 Barbarian, 59 Electro Dragon. **Spells:** 0 Lightning. **Heroes:** 1 Archer Queen, 2 Grand Warden, 6 Minion Prince
+**Cross-checked IDs** (export indices vs. API levels, in matching order). These are in `core/gamedata/.../game_ids.json`:
+troops 0–13, 15, 17, 22–24, 58, 59; spells 0–3, 5, 9–11, 16, 17, 28, 35; heroes 0, 1, 2, 6.
+Earlier confirmed from links: **Troops:** 0 Barbarian, 59 Electro Dragon. **Spells:** 0 Lightning. **Heroes:** 1 Archer Queen, 2 Grand Warden, 6 Minion Prince
 (0 Barbarian King and 4 Royal Champion assumed). **Siege (probable):** 51 Wall Wrecker.
 Save more in-game army links as test fixtures to fill in the ID table.
 
@@ -194,12 +199,14 @@ equipment, house_parts, skins, sceneries, buildings2 (builder base), …`
 - [x] Create the "Empty Activity" template (`D:\documents\web\Project\StudioTest`); versions recorded in §3
 - [x] Run the template on the phone (▶) and see "Hello Android!" (installed as `com.example.studiotest`)
 
-### M0 — Project setup
-- [ ] Multi-module Gradle project (`app`, `core/*`, `feature/*`), version catalog
-- [ ] Hilt, Navigation, theme, bottom nav shell
-- [ ] Sync + run an empty app in Android Studio
-- [ ] Move the early single-module scaffold (`app/.../data/*`) into `core/model`, `core/network`, `core/datastore`, `core/gamedata`
-- [ ] Replace the early scaffold's Gradle files (AGP 8.7 / Kotlin 2.0 / `kotlin.android` plugin), which are now out of date, with the §3 toolchain
+### M0 — Project setup ✅
+- [x] Multi-module Gradle project (`app`, `core/{model,network,datastore,gamedata,ui}`, `feature/{profile,upgrades,layouts,scout,attack}`), version catalog
+- [x] Convention plugins in `build-logic/` (`cochelper.android.application|library|compose|feature`, `cochelper.hilt`, `cochelper.jvm.library`)
+- [x] Hilt, type-safe Navigation, theme, bottom nav shell (4 tabs + Account in top bar)
+- [x] Build + run on the phone (`gradlew installDebug`), verified by screenshot
+- [x] Early scaffold moved into `core/model`, `core/network`, `core/datastore`, `core/gamedata`; old Gradle files replaced
+- [x] Dev API token + player tag read from `local.properties` → `BuildConfig` defaults in `core/datastore`
+- `core/database` and `core/links` will be created when first needed (M1 and M3).
 
 ### M1 — Profile (official API)
 - [ ] Settings screen: player tag, API token, base URL
@@ -269,3 +276,8 @@ equipment, house_parts, skins, sceneries, buildings2 (builder base), …`
   AGP 9's built-in Kotlin makes the early scaffold's Gradle files obsolete; they get replaced in M0.
 - **2026-10-28** — Template app builds and runs on the S25 Ultra. The toolchain is fully confirmed. Remaining P0 items
   (policy reading, the clipboard truncation check) don't block M0.
+- **2026-10-28** — **M0 done.** 11-module project with `build-logic` convention plugins builds and runs on the S25 Ultra
+  (bottom-nav shell + Account page reading settings via Hilt/DataStore). Bumped Kotlin 2.2.10 → 2.4.10 because
+  kotlinx-serialization 1.12 and current AndroidX need it. Java target 17. Seeded `game_ids.json` with troop, spell and hero
+  IDs cross-checked between the export and the API.
+  Build from the CLI: `JAVA_HOME="D:\Program Files\Android\jbr"` then `gradlew installDebug`.

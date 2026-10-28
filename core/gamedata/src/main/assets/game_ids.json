@@ -1,0 +1,45 @@
+{
+  "troops": {
+    "Barbarian": 0,
+    "Archer": 1,
+    "Goblin": 2,
+    "Giant": 3,
+    "Wall Breaker": 4,
+    "Balloon": 5,
+    "Wizard": 6,
+    "Healer": 7,
+    "Dragon": 8,
+    "P.E.K.K.A": 9,
+    "Minion": 10,
+    "Hog Rider": 11,
+    "Valkyrie": 12,
+    "Golem": 13,
+    "Witch": 15,
+    "Lava Hound": 17,
+    "Bowler": 22,
+    "Baby Dragon": 23,
+    "Miner": 24,
+    "Ice Golem": 58,
+    "Electro Dragon": 59
+  },
+  "spells": {
+    "Lightning Spell": 0,
+    "Healing Spell": 1,
+    "Rage Spell": 2,
+    "Jump Spell": 3,
+    "Freeze Spell": 5,
+    "Poison Spell": 9,
+    "Earthquake Spell": 10,
+    "Haste Spell": 11,
+    "Clone Spell": 16,
+    "Skeleton Spell": 17,
+    "Bat Spell": 28,
+    "Invisibility Spell": 35
+  },
+  "heroes": {
+    "Barbarian King": 0,
+    "Archer Queen": 1,
+    "Grand Warden": 2,
+    "Minion Prince": 6
+  }
+}
