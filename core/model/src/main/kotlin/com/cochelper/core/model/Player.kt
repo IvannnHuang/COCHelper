@@ -11,10 +11,18 @@ data class Player(
     val expLevel: Int = 0,
     val trophies: Int = 0,
     val warStars: Int = 0,
+    val clan: ClanRef? = null,
     val troops: List<PlayerUnit> = emptyList(),
     val heroes: List<PlayerUnit> = emptyList(),
     val spells: List<PlayerUnit> = emptyList(),
     val heroEquipment: List<PlayerUnit> = emptyList(),
+)
+
+@Serializable
+data class ClanRef(
+    val tag: String,
+    val name: String,
+    val clanLevel: Int = 0,
 )
 
 /**

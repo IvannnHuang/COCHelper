@@ -20,6 +20,8 @@ dependencies {
     implementation(project(":core:network"))
     implementation(project(":core:datastore"))
     implementation(project(":core:gamedata"))
+    implementation(project(":core:database"))
+    implementation(project(":core:data"))
 
     implementation(project(":feature:profile"))
     implementation(project(":feature:upgrades"))

@@ -208,10 +208,15 @@ equipment, house_parts, skins, sceneries, buildings2 (builder base), …`
 - [x] Dev API token + player tag read from `local.properties` → `BuildConfig` defaults in `core/datastore`
 - `core/database` and `core/links` will be created when first needed (M1 and M3).
 
-### M1 — Profile (official API)
-- [ ] Settings screen: player tag, API token, base URL
-- [ ] `CocApi.player()` + error handling (403 invalid IP / bad key, 404 tag)
-- [ ] Cache the player in Room; show the profile overview
+### M1 — Profile (official API) ✅
+- [x] Settings screen: player tag (validated against the tag alphabet), API token (masked), base URL (reset to default)
+- [x] `CocApi.player()` + error handling: `FetchError` maps 403 invalid IP / bad token, 404, 429, 503 and network failures
+  to clear messages, with an "Open settings" button where settings are the fix
+- [x] Cache in Room (`core/database`, player stored as JSON) via `PlayerRepository` (`core/data`)
+- [x] Throttling: auto-refresh at most every 10 min; pull-to-refresh at most every 30 s. Editing settings forces a refresh
+- [x] Profile overview: name, tag, TH, XP, trophies, war stars, clan, heroes, collection counts, "Updated …"
+- [x] Unit tests: `PlayerTagTest`, `FetchErrorTest`, `RefreshPolicyTest` (10 tests, all pass)
+- Note for M2: the "home troops" count (38) includes super troops. The upgrade advisor must filter them out (keep Ice Golem).
 
 ### M2 — Upgrade advisor
 - [ ] TH-cap table for heroes / troops / spells / pets / equipment
@@ -281,3 +286,6 @@ equipment, house_parts, skins, sceneries, buildings2 (builder base), …`
   kotlinx-serialization 1.12 and current AndroidX need it. Java target 17. Seeded `game_ids.json` with troop, spell and hero
   IDs cross-checked between the export and the API.
   Build from the CLI: `JAVA_HOME="D:\Program Files\Android\jbr"` then `gradlew installDebug`.
+- **2026-10-28** — **M1 done.** Added `core/database` (Room 2.8.5) and `core/data` (`PlayerRepository`). Verified on the phone:
+  the profile loads live from the API (毛咪的窝, TH11, clan 青云阁, 4 heroes), the settings screen works, and the cache is
+  reused on relaunch without an API call. 10/10 unit tests pass.

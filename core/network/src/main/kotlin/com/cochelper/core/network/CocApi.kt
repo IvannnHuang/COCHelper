@@ -1,6 +1,7 @@
 package com.cochelper.core.network
 
 import com.cochelper.core.model.Player
+import com.cochelper.core.model.PlayerTag
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
@@ -19,7 +20,7 @@ class CocApi @Inject constructor(
 ) {
 
     suspend fun player(baseUrl: String, token: String, tag: String): Player = withContext(Dispatchers.IO) {
-        val normalized = "#" + tag.trim().removePrefix("#").uppercase()
+        val normalized = PlayerTag.normalize(tag)
         val request = Request.Builder()
             .url("${baseUrl.trimEnd('/')}/players/${URLEncoder.encode(normalized, "UTF-8")}")
             .header("Authorization", "Bearer ${token.trim()}")

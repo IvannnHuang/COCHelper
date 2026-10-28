@@ -2,6 +2,7 @@ package com.cochelper.ui
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -23,7 +24,9 @@ import androidx.navigation.compose.rememberNavController
 import com.cochelper.feature.attack.navigation.attackScreen
 import com.cochelper.feature.layouts.navigation.layoutsScreen
 import com.cochelper.feature.profile.navigation.ProfileRoute
+import com.cochelper.feature.profile.navigation.navigateToSettings
 import com.cochelper.feature.profile.navigation.profileScreen
+import com.cochelper.feature.profile.navigation.settingsScreen
 import com.cochelper.feature.scout.navigation.scoutScreen
 import com.cochelper.feature.upgrades.navigation.UpgradesRoute
 import com.cochelper.feature.upgrades.navigation.upgradesScreen
@@ -35,11 +38,21 @@ fun CocHelperApp() {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = backStackEntry?.destination
+    val isTopLevel = TopLevelDestination.entries.any { dest ->
+        currentDestination?.hierarchy?.any { it.hasRoute(dest.routeClass) } == true
+    }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("COC Helper") },
+                navigationIcon = {
+                    if (!isTopLevel) {
+                        IconButton(onClick = { navController.popBackStack() }) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        }
+                    }
+                },
                 actions = {
                     IconButton(onClick = { navController.navigate(ProfileRoute) { launchSingleTop = true } }) {
                         Icon(Icons.Filled.AccountCircle, contentDescription = "Account")
@@ -76,7 +89,8 @@ fun CocHelperApp() {
             layoutsScreen()
             scoutScreen()
             attackScreen()
-            profileScreen()
+            profileScreen(onEditSettings = navController::navigateToSettings)
+            settingsScreen(onDone = { navController.popBackStack() })
         }
     }
 }
